@@ -1,0 +1,80 @@
+/* PC에서만 사용 */
+@media (min-width: 1181px) {}
+
+/* 1600*900 */
+@media (max-width: 1600px) {
+    /* main header */
+    .header .tp .menu-d1 > ul > li > a{
+        padding: 0 15px
+    }
+
+    .logout{
+        width: 34px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .logout::before{
+        margin: 0;
+        background-image: url(../img/common/ico-logout-opacity.png);
+    }
+
+    .logout > span{
+        display: none;
+    }
+}
+/* 1600*900 end*/
+
+/* 1366*768 */
+@media (max-width: 1366px) {}
+/* 1366*768 end */
+
+/* 1280px 미만 */
+@media (max-width: 1279px) {
+    /* login */
+    .login-wrap{
+        width: 100%;
+    }
+
+    .log-int-container{
+        padding: 0 30px;
+    }
+}
+/* 1280px 미만 end*/
+
+/* 1024px 이하 태블릿 */
+@media (max-width: 1024px){}
+/* 1024px 이하 태블릿 end */
+
+/* 768px 이하 모바일 */
+@media (max-width: 768px){}
+/* 768px 이하 모바일 end */
+
+/* 480px 이하 모바일 */
+@media (max-width: 480px){}
+/* 480px 이하 모바일 end */
+
+/* 360px 이하 모바일 */
+@media (max-width: 360px) {}
+/* 360px 이하 모바일 이하 */
+
+/* --------------------------------------------------------- 화면 높이 기준 */
+
+/* 1600*900 */
+@media (max-height: 850px) {}
+/* 1600*900 end*/
+
+@media (max-height: 757px) {}
+
+/* 1366*768 */
+@media (max-height: 625px) {}
+/* 1366*768 end*/
+
+/* 480px 이하 모바일 */
+@media (max-width: 480px) {}
+/* 480px 이하 모바일 end*/
+
+/* 332px 이하 모바일 (가로모드) */
+@media (max-height: 360px) {}
+/* 332px 이하 모바일 (가로모드) end*/
