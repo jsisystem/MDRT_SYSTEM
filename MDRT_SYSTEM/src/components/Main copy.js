@@ -12,7 +12,7 @@ function Main () {
 
     const closeModal = () => {
       setModalOpen(false);
-      sessionStorage.setItem('new', "No")
+      localStorage.setItem('new', "No")
     };
 
     useEffect(() => {
@@ -24,7 +24,7 @@ function Main () {
                 
         initializeMap();
         
-        if (sessionStorage.getItem('new') === "Yes") {
+        if (localStorage.getItem('new') === "Yes") {
           setModalOpen(true);
         }
     }, []);
@@ -32,11 +32,11 @@ function Main () {
     // const renderLinks = () => {
     //     const links = [];
         
-    //     if (sessionStorage.getItem('permission') === "TopManager") {
+    //     if (localStorage.getItem('permission') === "TopManager") {
     //       links.push(
     //         <>
     //         <Link to="/Update">
-    //           원시자료 승인요청: {`${sessionStorage.getItem('rawData')} 건`}
+    //           원시자료 승인요청: {`${localStorage.getItem('rawData')} 건`}
     //         </Link>
     //         <br/>
     //         </>
@@ -44,17 +44,17 @@ function Main () {
     //     }
         
     //     if (
-    //       sessionStorage.getItem('permission') === "Manager" ||
-    //       sessionStorage.getItem('permission') === "TopManager"
+    //       localStorage.getItem('permission') === "Manager" ||
+    //       localStorage.getItem('permission') === "TopManager"
     //     ) {
     //       links.push(
     //         <>
     //         <Link to="/Analyze">
-    //           분석자료 승인요청: {`${sessionStorage.getItem('analData')} 건`}
+    //           분석자료 승인요청: {`${localStorage.getItem('analData')} 건`}
     //         </Link>
     //         <br/>
     //         <Link to="/Analyze">
-    //           등록자료 승인요청: {`${sessionStorage.getItem('registration')} 건`}
+    //           등록자료 승인요청: {`${localStorage.getItem('registration')} 건`}
     //         </Link>
     //         </>
     //       );
@@ -76,19 +76,19 @@ function Main () {
                     <Footer/>
                 </div>            
             </div>            
-            <AlarmModal open={modalOpen} close={closeModal} header={`${sessionStorage.getItem('id')} 님`}>
+            <AlarmModal open={modalOpen} close={closeModal} header={`${localStorage.getItem('id')} 님`}>
                 신규 알림 입니다. <br/><br/>
-                <Link to="/NoticeBoard/Announcement">공지사항 : {`${sessionStorage.getItem('notify')} 건`}</Link><br/>
-                <Link to="/NoticeBoard/Inquiry">문의사항 : {`${sessionStorage.getItem('inquiry')} 건`}</Link><br/>
-                <Link to="/NoticeBoard/ErrorReporting">오류보고 : {`${sessionStorage.getItem('error')} 건`}</Link><br/><br/>
-                {sessionStorage.getItem('permission') === "MNG" ? 
-                    <> <Link to="/Update">원시자료 승인요청 : {`${sessionStorage.getItem('rawData')} 건`}</Link><br/></>
+                <Link to="/NoticeBoard/Announcement">공지사항 : {`${localStorage.getItem('notify')} 건`}</Link><br/>
+                <Link to="/NoticeBoard/Inquiry">문의사항 : {`${localStorage.getItem('inquiry')} 건`}</Link><br/>
+                <Link to="/NoticeBoard/ErrorReporting">오류보고 : {`${localStorage.getItem('error')} 건`}</Link><br/><br/>
+                {localStorage.getItem('permission') === "TopManager" ? 
+                    <> <Link to="/Update">원시자료 승인요청 : {`${localStorage.getItem('rawData')} 건`}</Link><br/></>
                  : null
                 }  
                 {
-                    sessionStorage.getItem('permission') === "MNG"  || sessionStorage.getItem('permission') === "SMNG" ? 
-                    <> <Link to="/Analyze">분석자료 승인요청 : {`${sessionStorage.getItem('analData')} 건`}</Link> <br/> 
-                       <Link to="/Analyze">등록자료 승인요청 : {`${sessionStorage.getItem('registration')} 건`}</Link><br/>
+                    localStorage.getItem('permission') === "Manager"  || localStorage.getItem('permission') === "TopManager" ? 
+                    <> <Link to="/Analyze">분석자료 승인요청 : {`${localStorage.getItem('analData')} 건`}</Link> <br/> 
+                       <Link to="/Analyze">등록자료 승인요청 : {`${localStorage.getItem('registration')} 건`}</Link><br/>
                     </> 
                     : null
                 }

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TableExcelData from '../components/TableExcelData';
+import CSVReader from 'react-csv-reader';
 import TableCSVData from '../components/TableCSVData';
 import Footer from "../components/Footer";
 import axios from 'axios';
@@ -10,37 +11,51 @@ function DataImport(){
 
     const [selectedFile, setSelectedFile] = useState();
     const [data, setData] = useState(null);
-    const [csvData, setCSVData] = useState(null);
     const [fileKind, setFileKind] = useState('Excel');
+    const [array, setArray] = useState([]);
+
+    const reader = new FileReader();
 
     const onHandleSelect = (e) =>{
       console.log(e.target.value)
       setSelectedFile(null);
-      setCSVData(null);
-      setData(null);
       setFileKind(e.target.value);
     }
   
     const handleSelectedFile = (e) => {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      if(fileKind === "CSV"){
-        Papa.parse(file, {
-          encoding: 'EUC-KR', // 인코딩 설정 추가
-          complete: (result) => {
-            setCSVData(result.data);
-          },
-        });
-        //setSelectedFile(file);
-      }         
+        const file = e.target.files[0];
+        setSelectedFile(file);
     };
 
+    const handleFileLoaded = (data, fileInfo) => {
+      setSelectedFile(data);
+    };
+
+    const csvFileToArray = string => {
+      const csvHeader = string.slice(0, string.indexOf("\n")).split(",");
+      const csvRows = string.slice(string.indexOf("\n") + 1).split("\n");
+  
+      const array = csvRows.map(i => {
+        const values = i.split(",");
+        const obj = csvHeader.reduce((object, header, index) => {
+          object[header] = values[index];
+          return object;
+        }, {});
+        return obj;
+      });
+  
+      setArray(array);
+    };
+  
     const handleViewData = (e) => {
       e.preventDefault();
 
+      console.log(selectedFile)
+      console.log(fileKind)
+
       if (selectedFile) {
         if(fileKind === 'Excel'){
-          const reader = new FileReader();
+
           reader.onload = (e) => {
               const data = e.target.result;
               const workbook = XLSX.read(data, { type: 'binary' });
@@ -55,9 +70,24 @@ function DataImport(){
           };
           reader.readAsBinaryString(selectedFile);
         }
-        else if(fileKind === 'CSV'){ 
-            setData(csvData);
+        else if(fileKind === 'CSV'){
+          console.log(fileKind);
+
+          reader.onload  = (e) => {
+
+            console.log(e.target.result);
+
+            const decoder = new TextDecoder('EUC-KR');
+            const text = decoder.decode(e.target.result);
+            console.log(text);
+            csvFileToArray(text);
+
+      
+            //reader.readAsText(file);
+            reader.readAsArrayBuffer(selectedFile);
           }
+          
+        }
         else {
           console.log(`fileKind :  ${fileKind}`)
           return;
@@ -120,6 +150,15 @@ function DataImport(){
                         <input type="file" accept=".xlsx" onChange={handleSelectedFile} />
                       :
                         <input type="file" accept=".csv" onChange={handleSelectedFile} />
+                        // <CSVReader
+                        //   onFileLoaded={handleFileLoaded}
+                        //   inputStyle={{ color: 'black' }}
+                        //   parserOptions={{
+                        //     header: true,
+                        //     skipEmptyLines: true,
+                        //     encoding: 'UTF-8', // 인코딩 설정 추가
+                        //   }}
+                        // />
                       }
                       
                       <button 
@@ -144,52 +183,36 @@ function DataImport(){
                   </div>
                 </div>
                 <div className="table-container">
+                  {console.log(fileKind)} 
                   {console.log(data)}  
-                  {data && (fileKind === 'Excel' ? <TableExcelData data={data} /> : 
-                    <table>
-                      <thead>
-                        <tr>
-                          {csvData.length > 0 &&
-                            csvData[0].map((header, index) => (
-                              <th key={index}>{header}</th>
-                            ))}
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {csvData.map((row, rowIndex) => (                          
-                          rowIndex > 0 ? 
-                          <tr key={rowIndex}>
-                          {row.map((cell, cellIndex) => (
-                            <td key={cellIndex}>{cell}</td>
-                          ))}
-                          </tr>
-                          :
-                          null
-                        ))}
-                      </tbody>
-                    </table>                  
-                  )}
-                  {/* {(fileKind === 'Excel' ? (data ? <TableExcelData data={data} /> : null) : 
+                  {console.log(selectedFile)}
+                  {(fileKind === 'Excel' ? (data ? <TableExcelData data={data} /> : null) :
+                    console.log(Object.keys(Object.assign({}, ...array))), 
                     (selectedFile ?
                       <table>
                         <thead>
-                          <tr>
-                            {Object.keys(selectedFile[0]).map((header, index) => (
-                              <th key={index}>{header}</th>
+                          <tr key={"header"}>
+                            {Object.keys(Object.assign({}, ...array)).map((column) => (
+                              <th key={column}>{column}</th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
-                          {selectedFile.map((row, index) => (
-                            <tr key={index}>
-                              {Object.values(row).map((cell, cellIndex) => (
-                                <td key={cellIndex}>{cell}</td>
-                              ))}
-                            </tr>
-                          ))}
+                          {
+                            array.map((row, rowIdx)=>(
+                              <tr key={rowIdx}>
+                                {Object.keys(Object.assign({}, ...array)).map((column, colIdx) => (
+                                  <td key={column}>
+                                    row[column]
+                                  </td>
+                                ))}
+                              </tr>
+                            ))
+                          }                    
                         </tbody>
-                      </table> : null)
-                  )} */}
+                      </table> : null
+                    )
+                  )}
                 </div>                
               </div>
             </div>

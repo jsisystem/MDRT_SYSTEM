@@ -13,6 +13,13 @@ const Login = (props) => {
         idInputRef.current.focus();
       }, []);
 
+      const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+          // 여기에서 입력값을 처리하거나 원하는 동작을 수행합니다.
+          handleLoginSubmit();
+        }
+      };
+
     const handleLoginSubmit = () => {
         let isLogin = false;
         axios.post('/login', 
@@ -28,21 +35,21 @@ const Login = (props) => {
             if( res.status === 200  && res.data.length === 1 ){
                 isLogin = true;
                 props.setIsLoggedIn(isLogin);
-                console.log(res,  res.data[0]);
+                //console.log(res,  res.data[0]);
                 props.setPermission(res.data[0].grade);
-                localStorage.clear()
-                localStorage.setItem('Login', isLogin)
-                localStorage.setItem('permission', res.data[0].grade)
-                localStorage.setItem('id', res.data[0].id)
-                localStorage.setItem('city', res.data[0].city)
-                localStorage.setItem('company', res.data[0].company)
-                localStorage.setItem('new', res.data[0].new)
-                localStorage.setItem('notify', res.data[0].notify)
-                localStorage.setItem('inquiry', res.data[0].inquiry)
-                localStorage.setItem('error', res.data[0].error)
-                localStorage.setItem('rawData', res.data[0].rawData)
-                localStorage.setItem('analData', res.data[0].analData)
-                localStorage.setItem('registration', res.data[0].registration)
+                sessionStorage.clear()
+                sessionStorage.setItem('Login', isLogin)
+                sessionStorage.setItem('permission', res.data[0].grade)
+                sessionStorage.setItem('id', res.data[0].id)
+                sessionStorage.setItem('city', res.data[0].city)
+                sessionStorage.setItem('company', res.data[0].company)
+                sessionStorage.setItem('new', res.data[0].new)
+                sessionStorage.setItem('notify', res.data[0].notify)
+                sessionStorage.setItem('inquiry', res.data[0].inquiry)
+                sessionStorage.setItem('error', res.data[0].error)
+                sessionStorage.setItem('rawData', res.data[0].rawData)
+                sessionStorage.setItem('analData', res.data[0].analData)
+                sessionStorage.setItem('registration', res.data[0].registration)
             }else{
                 isLogin= false;
                 props.setIsLoggedIn(isLogin);
@@ -76,7 +83,13 @@ const Login = (props) => {
                             <input className="form-control int-round mgb10" type="text" ref={idInputRef} placeholder="아이디를 입력해주세요." onChange={(event) => setLoginId(event.target.value)}/>
                         </li>
                         <li>
-                            <input type="password" className="form-control int-round mgb10" placeholder="비밀번호를 입력해주세요." onChange={(event) => setLoginPwd(event.target.value)}/>
+                            <input 
+                                type="password" 
+                                className="form-control int-round mgb10" 
+                                placeholder="비밀번호를 입력해주세요." 
+                                onChange={(event) => setLoginPwd(event.target.value)}
+                                onKeyDown={handleKeyDown}
+                            />
                         </li>
                         {/* <li className="mgb20">
                             <input className="form-check-input" type="checkbox" defaultValue id="chk01" />

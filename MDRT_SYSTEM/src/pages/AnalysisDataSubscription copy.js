@@ -3,6 +3,7 @@ import axios from 'axios';
 import YearMonthComboBox from "../components/YearMonthCombo";
 import { MultiSelect } from "react-multi-select-component";
 import Footer from "../components/Footer";
+import UseCityData from "../hook/UseCityData";
 
 function AnalysisDataSubscription(){
 
@@ -10,7 +11,7 @@ function AnalysisDataSubscription(){
     const [selected2, setSelected2] = useState([]);
     const [selected3, setSelected3] = useState([]);
 
-    const [cities, setCities] = useState([]);
+    //const [cities, setCities] = useState([]);
     const [selectedCities, setSelectedCities] = useState([]);
 
     const [business, setBusiness] = useState([]);
@@ -24,27 +25,29 @@ function AnalysisDataSubscription(){
 
     const [message, setMessage] = useState([]);
 
-    useEffect(() => {
-        async function fetchCities() {
-            try {
-              const response = await axios.post('/GetCity', {
-                id: sessionStorage.getItem('id'),
-                permission: sessionStorage.getItem('permission'),
-              });
-      
-              if (response.status === 200 && response.data.length > 0) {
-                const option = response.data.map((cityName) => ({ label: cityName, value: cityName }));
-                setCities(option);
-              } else {
-                alert('검색된 데이터가 없습니다.');
-              }
-            } catch (error) {
-              alert(error.response.data.error);
-            }
-          }
-      
-          fetchCities();
-    }, []);
+    const cities = UseCityData();
+    console.log(cities);  
+
+    // useEffect(() => {
+    //     axios.post('/GetCity', {
+    //         id:localStorage.getItem('id'),
+    //         permission:localStorage.getItem('permission')   
+    //     })
+    //     .then(function (res) {
+    //         //console.log(res, res.status ,  res.data.length);  
+    //         if( res.status === 200 && res.data.length > 0){               
+    //             //console.log(res.data); 
+    //             const option = res.data.map(cityName => ({ label: cityName, value: cityName }));
+    //             //const option = res.data.map(cityName => cityName.label);
+    //             setCities(option)
+    //         }else{                
+    //             alert('검색된 데이터가 없습니다.');
+    //         }
+    //     })
+    //     .catch(function (error) {
+    //         alert(error.response.data.error);
+    //     }); 
+    // }, []);
 
     useEffect(() => {
         //console.log(selected);
@@ -83,59 +86,60 @@ function AnalysisDataSubscription(){
     }, [selected3]);
 
     useEffect(() => {
-        if (selectedCities.length === 0) {
-          return;
+        //console.log(selectedCities); 
+        if(selectedCities.length === 0) {
+           // console.log("2222222222222222") 
+            return;
         }
-    
-        async function fetchBusiness() {
-          try {
-            const response = await axios.post('/GetBusiness', {
-              city: selectedCities,
-              id: sessionStorage.getItem('id'),
-              permission: sessionStorage.getItem('permission'),
-            });
-    
-            if (response.status === 200 && response.data.length > 0) {
-              const option = response.data.map((businessName) => ({ label: businessName, value: businessName }));
-              setBusiness(option);
-            } else {
-              alert('검색된 데이터가 없습니다.');
-            }
-          } catch (error) {
-            alert(error.response.data.error);
-          }
-        }
-    
-        fetchBusiness();
-      }, [selectedCities]);
 
-      useEffect(() => {
-        if (selectedBusiness.length === 0 || selectedCities.length === 0) {
-          return;
-        }
-    
-        async function fetchRoutes() {
-          try {
-            const response = await axios.post('/GetRoutes', {
-              city: selectedCities,
-              business: selectedBusiness,
-              id: sessionStorage.getItem('id'),
-              permission: sessionStorage.getItem('permission'),
-            });
-    
-            if (response.status === 200 && response.data.length > 0) {
-              const option = response.data.map((businessName) => ({ label: businessName, value: businessName }));
-              setRoutes(option);
-            } else {
-              alert('검색된 데이터가 없습니다.');
+        axios.post('/GetBusiness',{
+            city:selectedCities,
+            id:localStorage.getItem('id'),
+            permission:localStorage.getItem('permission')   
+        })
+        .then(function (res) {
+            //console.log(res, res.status ,  res.data.length);  
+            if( res.status === 200 && res.data.length > 0){               
+                //console.log(res.data); 
+                const option = res.data.map(businessName => ({ label: businessName, value: businessName }));
+                //const option = res.data.map(cityName => cityName.label);
+                setBusiness(option)
+            }else{                
+                alert('검색된 데이터가 없습니다.');
             }
-          } catch (error) {
+        })
+        .catch(function (error) {
             alert(error.response.data.error);
-          }
+        });   
+    }, [selectedCities]);
+
+    useEffect(() => {
+        //console.log(selectedBusiness); 
+        if(selectedBusiness.length === 0 || selectedCities.length === 0) {
+            //console.log("333333333333333") 
+            return;
         }
-    
-        fetchRoutes();
-      }, [selectedBusiness, selectedCities]);
+        axios.post('/GetRoutes',{  
+            city:selectedCities,
+            business:selectedBusiness,
+            id:localStorage.getItem('id'),
+            permission:localStorage.getItem('permission')   
+        })
+        .then(function (res) {
+            //console.log(res, res.status ,  res.data.length);  
+            if( res.status === 200 && res.data.length > 0){               
+                //console.log(res.data); 
+                const option = res.data.map(businessName => ({ label: businessName, value: businessName }));
+                //const option = res.data.map(cityName => cityName.label);
+                setRoutes(option)
+            }else{                
+                alert('검색된 데이터가 없습니다.');
+            }
+        })
+        .catch(function (error) {
+            alert(error.response.data.error);
+        });   
+    }, [selectedBusiness]);
 
     useEffect(() => {
         setMonth('');
@@ -152,33 +156,30 @@ function AnalysisDataSubscription(){
         } 
 
         //분석자료 신청하기
-        async function fetchSubscription() {
-      try {
-        const response = await axios.post('/DataSubscription', {
-          city: selectedCities,
+        axios.post('/DataSubscription', {            
+                city: selectedCities,
                 business: selectedBusiness,
                 routes: selectedRoutes,
                 year:year,
                 month:month,
-                id:sessionStorage.getItem('id'),
-                permission:sessionStorage.getItem('permission')
-        });
-
-        if (response.status === 200 && response.data.length > 0) {
-          console.log(response.data);   
-          //setMessage(res.data);
-          const msg = ` ${year} 년 ${month} 월 지역 : ${selectedCities.join(',')} 사업자 : ${selectedBusiness.join(',')} 노선 : ${selectedRoutes.join(',')} 의 분석데이터 요청이 완료 되었습니다. ` ;
-          //setMessage(msg);
-          setMessage(prevMessage=>[...prevMessage, msg]);
-        } else {
-          alert('검색된 데이터가 없습니다.');
-        }
-      } catch (error) {
-        alert(error.response.data.error);
-      }
-    }
-
-        fetchSubscription();    
+                id:localStorage.getItem('id'),
+                permission:localStorage.getItem('permission')  
+        })
+        .then(function (res) {
+        //console.log(res, res.status ,  res.data.length);  
+            if( res.status === 200 && res.data.length > 0){               
+                console.log(res.data);   
+                //setMessage(res.data);
+                const msg = ` ${year} 년 ${month} 월 지역 : ${selectedCities.join(',')} 사업자 : ${selectedBusiness.join(',')} 노선 : ${selectedRoutes.join(',')} 의 분석데이터 요청이 완료 되었습니다. ` ;
+                //setMessage(msg);
+                setMessage(prevMessage=>[...prevMessage, msg]);
+            }else{                
+                alert('검색된 데이터가 없습니다.');
+            }
+        })
+        .catch(function (error) {
+            alert(error.response.data.error);
+        });          
     };  
     
     return(

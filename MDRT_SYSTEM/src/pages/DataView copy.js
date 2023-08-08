@@ -1,4 +1,5 @@
-function Update(){
+function DataView(){
+
     return(
         <div className="notice-wrap">
             <div className="notice-container">
@@ -17,4 +18,4 @@ function Update(){
     );
 }
 
-export default Update;
+export default DataView;

@@ -7,12 +7,25 @@ const YearMonthComboBox = (props) => {
 
   const handleYearChange = (event) => {
     //setYear(event.target.value);
-    props.setYear(event.target.value);
+    if(props.point === "start"){
+      props.setStartYear(event.target.value);
+    }else if(props.point === "end"){
+      props.setEndYear(event.target.value);      
+    }else{
+      props.setYear(event.target.value);
+    }    
   };
 
   const handleMonthChange = (event) => {
     //setMonth(event.target.value);
-    props.setMonth(event.target.value);
+    if(props.point === "start"){
+      props.setStartMonth(event.target.value);
+    }else if(props.point === "end"){
+      props.setEndMonth(event.target.value);      
+    }else{
+      props.setMonth(event.target.value);
+    } 
+    
   };
 
   //const years = ['2023']; // 년도 옵션 배열

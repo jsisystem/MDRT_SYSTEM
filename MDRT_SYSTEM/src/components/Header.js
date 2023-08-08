@@ -62,7 +62,7 @@ const Header = (props) => {
       }, []);
     
     const handleLogout = () => {
-        localStorage.clear();
+        sessionStorage.clear();
         document.location.href = '/';
     };
 
@@ -70,17 +70,9 @@ const Header = (props) => {
         const topManagerMenu = (
             <ul>
                 <li className={`RawData ${menu === 'RawData' ? 'active' : ''}`}>
-               
-                    {/* <Link to="/RawData">원시자료관리</Link> */}
-                    {/* <Link onClick={handleClick}>원시자료관리</Link> */}
-                    <Link>원시자료관리</Link>
+                    <Link>자료관리</Link>
                     <div className="menu-d2">
                     <ul>
-                        <li className={`Update ${location.pathname === '/Update' ? 'active' : ''}`}>
-                        <Link to="Update">
-                            자료갱신 확인 및 검증
-                        </Link>
-                        </li>
                         <li className={`Analyze ${location.pathname === '/Analyze' ? 'active' : ''}`}>
                         <Link to="Analyze">
                         분석 및 등록자료 승인
@@ -88,7 +80,8 @@ const Header = (props) => {
                         </li>  
                     </ul>
                     </div>
-                </li>  
+                </li>
+ 
                 <li className={`Project ${menu === 'Project' ? 'active' : ''}`} >
                     {/* <Link onClick={handleClick}>프로젝트관리</Link> */}
                     <Link >프로젝트관리</Link>
@@ -271,6 +264,26 @@ const Header = (props) => {
         const managerMenu = (
             <ul>
                 <li className={`RawData ${menu === 'RawData' ? 'active' : ''}`}>
+               
+                    {/* <Link to="/RawData">원시자료관리</Link> */}
+                    {/* <Link onClick={handleClick}>원시자료관리</Link> */}
+                    <Link>원시자료관리</Link>
+                    <div className="menu-d2">
+                    <ul>
+                        <li className={`Update ${location.pathname === '/Update' ? 'active' : ''}`}>
+                        <Link to="Update">
+                            자료갱신 확인 및 검증
+                        </Link>
+                        </li>
+                        <li className={`Analyze ${location.pathname === '/Analyze' ? 'active' : ''}`}>
+                        <Link to="Analyze">
+                        분석 및 등록자료 승인
+                        </Link>
+                        </li>  
+                    </ul>
+                    </div>
+                </li> 
+                {/* <li className={`RawData ${menu === 'RawData' ? 'active' : ''}`}>
                     <Link>자료관리</Link>
                     <div className="menu-d2">
                     <ul>
@@ -281,7 +294,7 @@ const Header = (props) => {
                         </li>  
                     </ul>
                     </div>
-                </li>  
+                </li>   */}
                 <li className={`Project ${menu === 'Project' ? 'active' : ''}`}>
                     {/* <Link onClick={handleClick}>프로젝트관리</Link> */}
                     <Link >프로젝트관리</Link>
@@ -704,13 +717,13 @@ const Header = (props) => {
             </ul> 
         );
 
-        if (props.permission === 'TopManager') {
+        if (props.permission === 'SMNG') {
             return topManagerMenu;
-          } else if (props.permission === 'Manager') {
+          } else if (props.permission === 'MNG') {
             return managerMenu;
-          } else if (props.permission === 'Requester') {
+          } else if (props.permission === 'REQU') {
             return requesterMenu;
-          } else if (props.permission === 'Provider') {
+          } else if (props.permission === 'PROV') {
             return providerMenu;
           } else {
             return (

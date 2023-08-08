@@ -21,8 +21,8 @@ function DataItem({ item, index, onView, onUpload }) {
 }
 
 function UploadData(){
-    const city = localStorage.getItem('city');
-    const company = localStorage.getItem('company');
+    const city = sessionStorage.getItem('city');
+    const company = sessionStorage.getItem('company');
 
     const [year, setYear] = useState('');
     const [month, setMonth] = useState('');
@@ -145,11 +145,11 @@ function UploadData(){
                             <div className="flx-ai-cn" style={{gap: '25px'}}>
                                 <div className="flx-ai-cn">
                                     <label className="form-label">지역</label>
-                                    <input className="form-label" type="text" disabled value={localStorage.getItem('city')}  />
+                                    <input className="form-label" type="text" disabled value={sessionStorage.getItem('city')}  />
                                 </div>
                                 <div className="flx-ai-cn">
                                     <label className="form-label">사업자</label>
-                                    <input className="form-label" type="text" readOnly value={localStorage.getItem('company')}  />
+                                    <input className="form-label" type="text" readOnly value={sessionStorage.getItem('company')}  />
                                 </div>
                                 <div className="flx-ai-cn">
                                     <YearMonthComboBox setYear={setYear} setMonth={setMonth}/>
@@ -283,7 +283,7 @@ function UploadData(){
                 <Footer/>
                 </div>
             </div>
-            {/* <AlarmModal open={modalOpen} close={closeModal} header={`${localStorage.getItem('id')} 님`}>
+            {/* <AlarmModal open={modalOpen} close={closeModal} header={`${sessionStorage.getItem('id')} 님`}>
                     {requestData} 데이터 재 수집이 요청 되었습니다. 
             </AlarmModal> */}
         </div>
